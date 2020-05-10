@@ -15,15 +15,6 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "babel": {
-    "presets": [
-      "@babel/preset-env",
-      "@babel/preset-react"
-    ],
-    "plugins": [
-      "@babel/plugin-proposal-class-properties"
-    ]
-  },
   "devDependencies": {
     "@babel/core": "^7.9.6",
     "@babel/preset-env": "^7.9.6",
@@ -45,6 +36,9 @@
   },
   "dependencies": {
     "@material-ui/core": "^4.9.13",
+    "@material-ui/icons": "^4.9.1",
+    "clsx": "^1.1.0",
+    "core-js": "^2.6.10",
     "history": "^4.10.1",
     "react": "^16.13.1",
     "react-chat-widget": "^3.0.1",
