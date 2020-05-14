@@ -1,12 +1,12 @@
-import React, {Suspense} from "react";
+import React, {Suspense, useState} from "react";
 import {
     BrowserRouter,
     Route,
     Redirect,
     Switch
 } from 'react-router-dom';
-import Chats from "../chats";
-import { makeStyles } from '@material-ui/core/styles';
+import Rooms from "../rooms";
+import {makeStyles} from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Drawer from '@material-ui/core/Drawer';
 import Box from '@material-ui/core/Box';
@@ -17,14 +17,16 @@ import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 import Badge from '@material-ui/core/Badge';
-import Container from '@material-ui/core/Container';
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
+import ForumIcon from '@material-ui/icons/Forum';
 import Link from '@material-ui/core/Link';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import ChevronRight from '@material-ui/icons/ChevronRight';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import clsx from 'clsx';
+import ChatView from "../chatView";
+import Users from "../users";
+import CreateChat from "../../components/createChat";
 
 function Copyright() {
     return (
@@ -52,6 +54,13 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'flex-end',
+        padding: '0 8px',
+        ...theme.mixins.toolbar,
+    },
+    toolbarIconRight: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'flex-start',
         padding: '0 8px',
         ...theme.mixins.toolbar,
     },
@@ -118,11 +127,17 @@ const useStyles = makeStyles((theme) => ({
     fixedHeight: {
         height: 240,
     },
+    drawerMenu: {
+        width: 250
+    }
 }));
 
-export default function Main() {
+export default function Main({history}) {
     const classes = useStyles();
     const [open, setOpen] = React.useState(true);
+
+    const [menu, setMenu] = useState(false);
+
     const handleDrawerOpen = () => {
         setOpen(true);
     };
@@ -131,11 +146,21 @@ export default function Main() {
     };
     const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
+    const handlerMenuOpen = () => {
+        setMenu(true);
+    }
+
+    const handlerMenuClose = () => {
+        setMenu(false);
+    }
+
+
     return (
         <div className={classes.root}>
-            <CssBaseline />
+            <CssBaseline/>
             <AppBar position="absolute" className={clsx(classes.appBar, open && classes.appBarShift)}>
                 <Toolbar className={classes.toolbar}>
+
                     <IconButton
                         edge="start"
                         color="inherit"
@@ -143,22 +168,24 @@ export default function Main() {
                         onClick={handleDrawerOpen}
                         className={clsx(classes.menuButton, open && classes.menuButtonHidden)}
                     >
-                        <MenuIcon />
+                        <Badge badgeContent={4} color="secondary">
+                            <ForumIcon/>
+                        </Badge>
                     </IconButton>
+
+
                     <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
                         Dashboard
                     </Typography>
-                    <IconButton color="inherit">
-                        <Badge badgeContent={4} color="secondary">
-                            <NotificationsIcon />
-                        </Badge>
+
+                    <IconButton onClick={handlerMenuOpen}
+                                color="inherit"
+                                className={clsx(classes.menuButton, menu && classes.menuButtonHidden)}>
+                        <MenuIcon></MenuIcon>
                     </IconButton>
-                    <IconButton onClick={() => {
-                        localStorage.setItem('login', '');
-                        location.reload();
-                    }}>Exit</IconButton>
                 </Toolbar>
             </AppBar>
+
             <Drawer
                 variant="permanent"
                 classes={{
@@ -168,15 +195,33 @@ export default function Main() {
             >
                 <div className={classes.toolbarIcon}>
                     <IconButton onClick={handleDrawerClose}>
-                        <ChevronLeftIcon />
+                        <ChevronLeftIcon/>
                     </IconButton>
                 </div>
-                <Divider />
+                <Divider/>
+                {open && <CreateChat/>}
+                <Rooms history={history}/>
             </Drawer>
+
+            <Drawer anchor={'right'}
+                    classes={{
+                        paper: classes.drawerMenu
+                    }}
+                    open={menu}
+            >
+                <div className={classes.toolbarIconRight}>
+                    <IconButton onClick={handlerMenuClose}>
+                        <ChevronRight/>
+                    </IconButton>
+                </div>
+                <Divider/>
+                <Users history={history}/>
+            </Drawer>
+
             <main className={classes.content}>
-                <div className={classes.appBarSpacer} />
+                <div className={classes.appBarSpacer}/>
                 <Switch>
-                    <Route path={'/chats'} component={Chats} />
+                    <Route path={'/view/:id'} component={ChatView}/>
                 </Switch>
             </main>
         </div>

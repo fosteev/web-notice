@@ -11,7 +11,7 @@ import {
     Route,
     Redirect
 } from 'react-router-dom';
-import Chats from "./screens/chats";
+import 'react-chat-elements/dist/main.css';
 
 const App = () => {
     subscribeToChat('5eaeaa3ba6bd332350f141e7', msg => {
