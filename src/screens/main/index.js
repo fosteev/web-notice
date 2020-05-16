@@ -22,11 +22,12 @@ import Link from '@material-ui/core/Link';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRight from '@material-ui/icons/ChevronRight';
-import NotificationsIcon from '@material-ui/icons/Notifications';
+import {isMobile} from "react-device-detect";
 import clsx from 'clsx';
 import ChatView from "../chatView";
 import Users from "../users";
 import CreateChat from "../../components/createChat";
+import RoomEditor from "../../components/roomEditor";
 
 function Copyright() {
     return (
@@ -41,7 +42,7 @@ function Copyright() {
     );
 }
 
-const drawerWidth = 240;
+const drawerWidth = isMobile ? window.screen.width : 240;
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -72,7 +73,7 @@ const useStyles = makeStyles((theme) => ({
         }),
     },
     appBarShift: {
-        marginLeft: drawerWidth,
+        marginLeft: 0,
         width: `calc(100% - ${drawerWidth}px)`,
         transition: theme.transitions.create(['width', 'margin'], {
             easing: theme.transitions.easing.sharp,
@@ -128,7 +129,7 @@ const useStyles = makeStyles((theme) => ({
         height: 240,
     },
     drawerMenu: {
-        width: 250
+        width: isMobile ? window.screen.width : 240
     }
 }));
 
@@ -154,6 +155,12 @@ export default function Main({history}) {
         setMenu(false);
     }
 
+    const handlerSelectChat = () => {
+        if (isMobile) {
+            handleDrawerClose();
+        }
+    }
+
 
     return (
         <div className={classes.root}>
@@ -173,10 +180,7 @@ export default function Main({history}) {
                         </Badge>
                     </IconButton>
 
-
-                    <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-                        Dashboard
-                    </Typography>
+                    <RoomEditor className={classes.title} />
 
                     <IconButton onClick={handlerMenuOpen}
                                 color="inherit"
@@ -187,7 +191,7 @@ export default function Main({history}) {
             </AppBar>
 
             <Drawer
-                variant="permanent"
+                variant={isMobile ? 'temporary' : "permanent"}
                 classes={{
                     paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose),
                 }}
@@ -200,7 +204,7 @@ export default function Main({history}) {
                 </div>
                 <Divider/>
                 {open && <CreateChat/>}
-                <Rooms history={history}/>
+                <Rooms history={history} onSelect={handlerSelectChat} />
             </Drawer>
 
             <Drawer anchor={'right'}
@@ -215,7 +219,6 @@ export default function Main({history}) {
                     </IconButton>
                 </div>
                 <Divider/>
-                <Users history={history}/>
             </Drawer>
 
             <main className={classes.content}>

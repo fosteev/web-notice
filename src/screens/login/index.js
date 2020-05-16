@@ -12,6 +12,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import {request} from "../../actions/main";
 
 function Copyright() {
     return (
@@ -32,6 +33,13 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
+        justifyContent: 'center'
+    },
+    main: {
+        height: '95vh',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center'
     },
     avatar: {
         margin: theme.spacing(1),
@@ -53,12 +61,30 @@ export default function Login() {
 
     const handlerChangeEmail = event => setEmail(event.target.value);
 
-    const handlerSignIn = () => {
-        localStorage.setItem('login', email);
+    const handlerSignIn = async () => {
+        //localStorage.setItem('login', email);
+
+        const {data} = await request(`users/findByEmail/${email}`)
+
+        if (data) {
+            localStorage.setItem('login', email);
+            location.reload();
+        } else {
+            try {
+                const resp = await request('users', 'POST', {
+                    email: email,
+                    password: '123'
+                });
+                localStorage.setItem('login', email);
+                location.reload();
+            } catch (e) {
+                console.log(e);
+            }
+        }
     }
 
     return (
-        <Container component="main" maxWidth="xs">
+        <Container component="main" className={classes.main} maxWidth="xs">
             <CssBaseline/>
             <div className={classes.paper}>
                 <Avatar className={classes.avatar}>
@@ -96,7 +122,7 @@ export default function Login() {
                         {/*</Grid>*/}
                     </Grid>
                     <Button
-                        type="submit"
+                        //type="submit"
                         fullWidth
                         variant="contained"
                         color="primary"

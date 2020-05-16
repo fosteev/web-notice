@@ -11,6 +11,8 @@ import Slide from '@material-ui/core/Slide';
 import {useDispatch, useSelector} from "react-redux";
 import {createRoom} from "../../actions/rooms";
 import {getUsers} from "../../actions/users";
+import {isMobile} from "react-device-detect";
+
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -56,7 +58,10 @@ export default function CreateChat() {
         dispatch(
             createRoom({
                 name: name,
-                users: JSON.stringify(users.concat([user]).map(u => u._id))
+                admin: user._id,
+                users: JSON.stringify(
+                    checked.map(c => c._id).concat([user._id])
+                )
             })
         )
         handleClose();
@@ -71,6 +76,7 @@ export default function CreateChat() {
                 open={open}
                 TransitionComponent={Transition}
                 keepMounted
+                fullScreen={isMobile}
                 onClose={handleClose}
                 aria-labelledby="alert-dialog-slide-title"
                 aria-describedby="alert-dialog-slide-description"
@@ -81,25 +87,25 @@ export default function CreateChat() {
                 <DialogContent>
                     <TextField label="Enter chat name"
                                onChange={e => setName(e.target.value)}
-                               value={name} />
+                               value={name}/>
                     <div style={{
                         display: 'flex',
                         flexDirection: 'column'
                     }}>
                         {
                             users.map(u => (
-                                <FormControlLabel
-                                    label="Primary"
-                                    control={
-                                        <Checkbox
-                                            //checked={state.checkedF}
-                                            onChange={(e) => handlerChecked(u, e)}
-                                            name="checkedF"
-                                            indeterminate
-                                        />
-                                    }
-                                    label={u.email}
-                                />
+                                    <FormControlLabel
+                                        label="Primary"
+                                        control={
+                                            <Checkbox
+                                                //checked={state.checkedF}
+                                                onChange={(e) => handlerChecked(u, e)}
+                                                name="checkedF"
+                                                indeterminate
+                                            />
+                                        }
+                                        label={u.email}
+                                    />
                                 )
                             )
                         }

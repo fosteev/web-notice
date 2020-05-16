@@ -2,8 +2,14 @@ import React, {useEffect} from "react";
 import {getRooms} from "../../actions/rooms";
 import {useDispatch, useSelector} from "react-redux";
 import ChatItem from "../../components/chatItem";
+import PropTypes from 'prop-types';
 
-export default function Rooms({history}) {
+Rooms.propTypes = {
+    history: PropTypes.object,
+    onSelect: PropTypes.func
+}
+
+export default function Rooms({history, onSelect}) {
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -16,6 +22,10 @@ export default function Rooms({history}) {
         history.push('/view/' + id, {
             id: id
         });
+
+        if (onSelect) {
+            onSelect(id);
+        }
     }
 
     return (

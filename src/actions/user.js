@@ -10,7 +10,7 @@ function responseUser(data) {
 
 export function getUser() {
     return async dispatch => {
-        const {data} = await request('users/' + localStorage.getItem('login'))
+        const {data} = await request('users/findByEmail/' + localStorage.getItem('login'))
         dispatch(responseUser(data))
     }
 }
