@@ -1,4 +1,4 @@
-import React, {Suspense, useState} from "react";
+import React, {Suspense, useEffect, useState} from "react";
 import {
     BrowserRouter,
     Route,
@@ -29,6 +29,8 @@ import Users from "../users";
 import CreateChat from "../../components/createChat";
 import RoomEditor from "../../components/roomEditor";
 import Button from "@material-ui/core/Button";
+import {useDispatch} from "react-redux";
+import {getUser} from "../../actions/user";
 
 function Copyright() {
     return (
@@ -137,8 +139,13 @@ const useStyles = makeStyles((theme) => ({
 export default function Main({history}) {
     const classes = useStyles();
     const [open, setOpen] = React.useState(true);
-
     const [menu, setMenu] = useState(false);
+
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(getUser());
+    }, []);
 
     const handleDrawerOpen = () => {
         setOpen(true);
