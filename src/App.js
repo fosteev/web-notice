@@ -20,7 +20,7 @@ const App = () => {
 
     const login = localStorage.getItem('login');
 
-    if (login) {
+    if (login && (login !== '')) {
         return (
             <BrowserRouter>
                 <div className='router'>

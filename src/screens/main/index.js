@@ -28,6 +28,7 @@ import ChatView from "../chatView";
 import Users from "../users";
 import CreateChat from "../../components/createChat";
 import RoomEditor from "../../components/roomEditor";
+import Button from "@material-ui/core/Button";
 
 function Copyright() {
     return (
@@ -161,6 +162,11 @@ export default function Main({history}) {
         }
     }
 
+    const handlerExit = () => {
+        location.setItem('login', '');
+        location.reload();
+    }
+
 
     return (
         <div className={classes.root}>
@@ -219,6 +225,10 @@ export default function Main({history}) {
                     </IconButton>
                 </div>
                 <Divider/>
+
+                <Button onClick={handlerExit}>
+                    Exit
+                </Button>
             </Drawer>
 
             <main className={classes.content}>
