@@ -163,7 +163,7 @@ export default function Main({history}) {
     }
 
     const handlerExit = () => {
-        location.setItem('login', '');
+        localStorage.setItem('login', '');
         location.reload();
     }
 
